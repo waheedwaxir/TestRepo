@@ -1,0 +1,9 @@
+<odoo>
+    <data>
+
+        <!--   Hide Purchase order report button    -->
+        <record id="purchase.action_report_purchase_order" model="ir.actions.report">
+            <field name="binding_model_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

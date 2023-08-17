@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="purchase_custom_header_template">
+            <div class="header" width="100%">
+                <table class="table table-borderless" width="100%">
+                    <tr>
+                        <td width="50%">
+                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                 style="height:90px;width:45%;" alt="Logo"/>
+                        </td>
+                        <td style="color:white" width="20%">.</td>
+                        <td width="30%">
+                            <span t-esc="o.company_id.name"/>
+                            <address>
+                                <span t-field="o.company_id.street"/>
+                                <br/>
+                                <span t-field="o.company_id.city"/>
+                                ,
+                                <span t-field="o.company_id.state_id"/>
+                                <br/>
+                                <span t-field="o.company_id.country_id"/>
+                            </address>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="footer" width="100%">
+                <table class="table table-borderless" width="100%">
+                    <tr>
+                        <td style="text-align:center">
+                             <span t-field="o.company_id.report_footer"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+        <template id="purchase_oder_custom_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="purchase_order_report.purchase_custom_header_template"/>
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div style="overflow: auto;">
+                                <table style="float: left; width: 30%;" class="table table-borderless table-sm">
+                                    <!-- Table 1 content here -->
+                                    <tr>
+                                        <td>
+                                            <b>Delivery Address:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.company_id.name"/>
+                                            <address>
+                                                <span t-field="o.company_id.street"/>
+                                                <br/>
+                                                <span t-field="o.company_id.city"/>,
+                                                <span t-field="o.company_id.state_id"/>
+                                                <br/>
+                                                <span t-field="o.company_id.country_id"/>
+                                                <br/>
+                                                <span t-field="o.company_id.phone"/>
+                                            </address>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table class="table table-borderless" style="float: left; width: 30%;">
+                                    <!-- Table 2 content here -->
+                                </table>
+
+                                <table style="float: left; width: 40%;" class="table table-borderless table-sm">
+                                    <tr>
+                                        <td>
+                                            <b>Supplier Address:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o.partner_id.name"/>
+                                            <address>
+                                                <span t-field="o.partner_id.street"/>
+                                                <br/>
+                                                <span t-field="o.partner_id.city"/>,
+                                                <span t-field="o.partner_id.state_id"/>
+                                                <br/>
+                                                <span t-field="o.partner_id.country_id"/>
+                                                <br/>
+                                                <span t-field="o.company_id.phone"/>
+                                            </address>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+
+                            <div>
+                                <h4 style="color:#26394d">
+                                    Purchase Order#
+                                    <span style="color:#c79610" t-esc="o.name"/>
+                                </h4>
+                            </div>
+                            <table width="100%" class="table table-borderless table-sm">
+                                <tr>
+                                    <th style="text-align:left" width="30%">Purchase Representative:</th>
+                                    <th style="text-align:left" width="30%">Your Order Reference:</th>
+                                    <th width="40%">Order Date:</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="o.partner_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o.partner_ref"/>
+                                    </td>
+                                    <td style="text-align:left">
+                                        <span t-esc="o.date_approve"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table width="100%" class="table table-bordered">
+                                <tr>
+                                    <th width="40%" style="color:#26394d">DESCRIPTION</th>
+                                    <th width="8%" style="color:#26394d">BARCODE</th>
+                                    <th width="7%" style="color:#26394d">TAXES</th>
+                                    <th width="7%" style="color:#26394d">DATE REQ</th>
+                                    <th width="7%" style="color:#26394d">QTY</th>
+                                    <th width="15%" style="color:#26394d">UNIT PRICE</th>
+                                    <th width="6%" style="color:#26394d">DISC(%)</th>
+                                    <th width="10%" style="color:#26394d">AMOUNT</th>
+                                </tr>
+                                <t t-foreach="o.order_line" t-as="line">
+                                    <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                        <t t-if="not line.display_type">
+                                            <td style="text-align:left">
+                                                <span t-field="line.product_id"/>
+                                            </td>
+                                            <td style="text-align:left">
+                                                <!--                                            <span t-field="o.date_planned"/>-->
+                                            </td>
+                                            <td style="text-align:right">
+                                                <span t-field="line.taxes_id"/>
+                                            </td>
+                                            <td style="text-align:left">
+                                                <span t-field="o.date_planned" t-options='{"widget": "date"}'/>
+                                            </td>
+                                            <td style="text-align:right">
+                                                <span t-field="line.product_qty"/>
+                                            </td>
+                                            <td style="text-align:right">
+                                                <span t-field="line.price_unit"/>
+                                            </td>
+                                            <td style="text-align:right">
+                                                <!--                                            <span t-field="line.price_unit"/>-->
+                                            </td>
+                                            <td style="text-align:right">
+                                                <span t-field="line.price_subtotal"/>
+                                            </td>
+                                        </t>
+
+                                        <t t-if="line.display_type == 'line_section'">
+                                            <td name="td_section_line" colspan="99">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <t t-set="current_section" t-value="line"/>
+                                            <t t-set="current_subtotal" t-value="0"/>
+                                        </t>
+                                        <t t-if="line.display_type == 'line_note'">
+                                            <td name="td_note_line" colspan="99">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                        </t>
+
+                                    </tr>
+                                    <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type == 'line_section')">
+                                    </t>
+                                </t>
+                            </table>
+
+                            <table width="100%" class="table table-table-bordered table-sm">
+                                <tr width="100%">
+                                    <td style="border:hidden;" width="70%"></td>
+                                    <td width="15%" style="text-align:left; background-color:#c79610;color:white">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td style="text-align:right; background-color:#c79610; color:white" width="15%">
+                                        <strong>
+                                            <span t-field="o.amount_total"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </table>
+                            <t t-set="test" t-value="len(o.notes)"/>
+                            <t t-if="test > 11">
+                                <table  width="70%" class="table table-borderless table-sm">
+                               
+                                    <tr>
+                                        <th>TERMS AND CONDITIONS</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span t-field="o.notes"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
